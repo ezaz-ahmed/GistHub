@@ -4,7 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strconv"
+
+	"github.com/ezaz-ahmed/money-minder/conversion"
 )
 
 type TextIncludedPriceJob struct {
@@ -39,22 +40,16 @@ func (job *TextIncludedPriceJob) LoadPrices() {
 		return
 	}
 
-	prices := make([]float64, len(lines))
+	prices, err := conversion.StringsToFloat(lines)
 
-	for index, val := range lines {
-		floatPrice, err := strconv.ParseFloat(val, 64)
-
-		if err != nil {
-			fmt.Println("Converting price to float failed!")
-			fmt.Println(err)
-			file.Close()
-			return
-		}
-
-		prices[index] = floatPrice
+	if err != nil {
+		fmt.Println(err)
+		file.Close()
+		return
 	}
 
 	job.InputPrices = prices
+	file.Close()
 }
 
 func (job *TextIncludedPriceJob) Process() {
