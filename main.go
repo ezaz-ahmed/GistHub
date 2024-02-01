@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/ezaz-ahmed/money-minder/cmdmanager"
 	"github.com/ezaz-ahmed/money-minder/prices"
 )
@@ -11,6 +13,11 @@ func main() {
 		cmdm := cmdmanager.New()
 
 		priceJob := prices.NewTextIncludedPriceJob(cmdm, taxRate)
-		priceJob.Process()
+		err := priceJob.Process()
+
+		if err != nil {
+			fmt.Println("could not process job")
+			fmt.Println(err)
+		}
 	}
 }

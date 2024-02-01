@@ -14,26 +14,30 @@ type TextIncludedPriceJob struct {
 	TextIncludedPrices map[string]string   `json:"tax_included_prices"`
 }
 
-func (job *TextIncludedPriceJob) LoadPrices() {
+func (job *TextIncludedPriceJob) LoadPrices() error {
 	lines, err := job.IOManager.ReadLines()
 
 	if err != nil {
-		fmt.Println(err)
-		return
+		return err
 	}
 
 	prices, err := conversion.StringsToFloat(lines)
 
 	if err != nil {
-		fmt.Println(err)
-		return
+		return err
 	}
 
 	job.InputPrices = prices
+	return nil
 }
 
-func (job *TextIncludedPriceJob) Process() {
-	job.LoadPrices()
+func (job *TextIncludedPriceJob) Process() error {
+	err := job.LoadPrices()
+
+	if err != nil {
+		return err
+	}
+
 	result := make(map[string]string)
 
 	for _, price := range job.InputPrices {
@@ -42,7 +46,7 @@ func (job *TextIncludedPriceJob) Process() {
 	}
 
 	job.TextIncludedPrices = result
-	job.IOManager.WriteResult(job)
+	return job.IOManager.WriteResult(job)
 }
 
 func NewTextIncludedPriceJob(iom iomanager.IOManager, taxRate float64) *TextIncludedPriceJob {
