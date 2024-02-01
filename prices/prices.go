@@ -4,14 +4,14 @@ import (
 	"fmt"
 
 	"github.com/ezaz-ahmed/money-minder/conversion"
-	"github.com/ezaz-ahmed/money-minder/filemanager"
+	"github.com/ezaz-ahmed/money-minder/iomanager"
 )
 
 type TextIncludedPriceJob struct {
-	IOManager          filemanager.FileManager `json:"-"`
-	TaxRate            float64                 `json:"tax_rate"`
-	InputPrices        []float64               `json:"input_prices"`
-	TextIncludedPrices map[string]string       `json:"tax_included_prices"`
+	IOManager          iomanager.IOManager `json:"-"`
+	TaxRate            float64             `json:"tax_rate"`
+	InputPrices        []float64           `json:"input_prices"`
+	TextIncludedPrices map[string]string   `json:"tax_included_prices"`
 }
 
 func (job *TextIncludedPriceJob) LoadPrices() {
@@ -45,9 +45,9 @@ func (job *TextIncludedPriceJob) Process() {
 	job.IOManager.WriteResult(job)
 }
 
-func NewTextIncludedPriceJob(fm filemanager.FileManager, taxRate float64) *TextIncludedPriceJob {
+func NewTextIncludedPriceJob(iom iomanager.IOManager, taxRate float64) *TextIncludedPriceJob {
 	return &TextIncludedPriceJob{
-		IOManager:   fm,
+		IOManager:   iom,
 		InputPrices: []float64{10, 20, 30},
 		TaxRate:     taxRate,
 	}
